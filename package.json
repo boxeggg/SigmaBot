@@ -1,0 +1,10 @@
+{
+  "name": "SigmaBot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "type": "module",
+  "dependencies": {
+    "axios": "^1.7.2"
+  }
+}
