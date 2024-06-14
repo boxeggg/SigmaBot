@@ -2,14 +2,17 @@
   "name": "SigmaBot",
   "version": "1.0.0",
   "description": "",
-  "main": "src/main.js",
-  "type": "module",
+  "main": "src/index.js",
   "dependencies": {
     "@discordjs/builders": "^1.8.2",
     "@discordjs/rest": "^2.3.0",
     "@discordjs/voice": "^0.17.0",
     "axios": "^1.7.2",
     "discord-player": "^6.6.10",
-    "discord.js": "^14.15.3"
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.4.5",
+    "ffmpeg-static": "^5.2.0",
+    "mediaplex": "^0.0.9",
+    "ytdl-core": "^4.11.5"
   }
 }
