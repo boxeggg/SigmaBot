@@ -38,7 +38,7 @@ module.exports = {
                 }
                 
             } catch (error) {
-                console.error(error);
+                console.log(error);
                 return interaction.followUp(`Cant play a track`);
                 
             }
