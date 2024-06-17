@@ -36,6 +36,14 @@ player.events.on('playerStart', (queue, track) => {
     queue.metadata.channel.send(`Started playing **${track.title}**!`);
     return queue;
 });
+player.events.on('error', (queue, error) => {
+    queue.metadata.channel.send(`**There was an error with playing ${track.name}**`);
+    console.log(error);
+});
+player.events.on('playerError', (queue, error) => {
+    queue.metadata.channel.send(`**Cant find your video or it is NSFW**`);
+    console.log(error);
+});
 
 
 

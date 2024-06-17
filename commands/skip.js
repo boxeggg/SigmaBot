@@ -11,10 +11,6 @@ module.exports = {
 		const player = useMainPlayer()
         const queue = useQueue(interaction.guild.id)
         queue.node.skip();
-        
-        
-
-
 
         }
 	}
