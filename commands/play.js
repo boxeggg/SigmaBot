@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { useMainPlayer, SearchResult,GuildQueue, useQueue } = require("discord-player"); 
 const { ApiService } = require("../ApiService");
-let apiService = new ApiService("localhost:5205");
+let apiService = ApiService.getInstance("localhost:5205")
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("play")
@@ -30,7 +30,8 @@ module.exports = {
                         Url: search.tracks[i].url,
                         User: interaction.member.displayName
                     })}
-                await apiService.addPlaylist(trackPlaylist);
+                response = await  apiService.addPlaylist(trackPlaylist);
+                console.log(response);
                 interaction.followUp(`**${search.playlist.title}** enqueued!`);
                 }          
             else{

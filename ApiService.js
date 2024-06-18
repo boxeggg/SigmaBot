@@ -2,7 +2,19 @@ const axios = require("axios");
 
 class ApiService {
     constructor(url) {
+        if (ApiService.instance) {
+            return ApiService.instance;
+        }
+
+        ApiService.instance = this;
         this.url = url;
+    }
+
+    static getInstance(url) {
+        if (!this.instance) {
+            this.instance = new ApiService(url);
+        }
+        return this.instance;
     }
 
     async getLastRequest() {

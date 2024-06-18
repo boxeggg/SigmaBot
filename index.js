@@ -8,9 +8,7 @@ const { Player } = require("discord-player");
 const fs = require("node:fs");
 const path = require("node:path");
 
-let apiService = new ApiService("localhost:5205");
-
-
+let apiService = ApiService.getInstance("localhost:5205")
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates]
 });
