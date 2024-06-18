@@ -13,6 +13,14 @@ class ApiService {
             return this.handleError(error);
         }
     }
+    async clearQueue() {
+        try {
+            const response = await axios.delete(`http://${this.url}/api/Request/clear`);
+            return response.data;
+        } catch (error) {
+            return this.handleError(error);
+        }
+    }
 
     async getAllRequest() {
         try {
@@ -62,6 +70,14 @@ class ApiService {
     async addRequest(request) {
         try {
             const response = await axios.post(`http://${this.url}/api/Request/new`, request);
+            return response.data;
+        } catch (error) {
+            return this.handleError(error);
+        }
+    }
+    async addPlaylist(request) {
+        try {
+            const response = await axios.post(`http://${this.url}/api/Request/playlist`, request);
             return response.data;
         } catch (error) {
             return this.handleError(error);

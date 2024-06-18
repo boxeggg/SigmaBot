@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { useMainPlayer } = require("discord-player"); 
+const { useMainPlayer, SearchResult,GuildQueue, useQueue } = require("discord-player"); 
 const { ApiService } = require("../ApiService");
-
+let apiService = new ApiService("localhost:5205");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("play")
@@ -21,22 +21,35 @@ module.exports = {
 
         if (interaction.options.getSubcommand() === "song") {
             try {
-                let query = interaction.options.getString("url", true);
+            let search = await player.search(interaction.options.getString("url", true))
+            if(search.hasPlaylist()){
+                trackPlaylist = [];
+                for(i = 0; i<search.tracks.length;i++){
+                    trackPlaylist.push({
+                        Name: search.tracks[i].title,
+                        Url: search.tracks[i].url,
+                        User: interaction.member.displayName
+                    })}
+                await apiService.addPlaylist(trackPlaylist);
+                interaction.followUp(`**${search.playlist.title}** enqueued!`);
+                }          
+            else{
+                response = await apiService.addRequest({
+                    Name: search.tracks[0].title,
+                    Url: interaction.options.getString("url", true),
+                    User: interaction.member.displayName
+                })
+                
+                interaction.followUp(`**${search.tracks[0].title}** enqueued!`);
+        
 
-                const { track } = await player.play(channel, query, {
+            }
+                let query = await apiService.getLastRequest()
+                const { track } = await player.play(channel, search, {
                     nodeOptions: {
                         metadata: interaction 
                     }
                 });
-                if(track.playlist)
-                {
-                return interaction.followUp(`**${track.playlist.title}** enqueued!`);
-                }
-                else
-                {
-                    return interaction.followUp(`**${track.title}** enqueued!`);
-                }
-                
             } catch (error) {
                 console.log(error);
                 return interaction.followUp(`Cant play a track`);

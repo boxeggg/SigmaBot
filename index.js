@@ -8,8 +8,8 @@ const { Player } = require("discord-player");
 const fs = require("node:fs");
 const path = require("node:path");
 
-
 let apiService = new ApiService("localhost:5205");
+
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates]
@@ -32,8 +32,13 @@ for (const file of commandFiles) {
         console.error(`The command at ${filePath} is missing a required "data" or "execute" property.`);
     }
 }
-player.events.on('playerStart', (queue, track) => {
+player.events.on('playerStart', async (queue, track) =>  {
     queue.metadata.channel.send(`Started playing **${track.title}**!`);
+    return queue;
+});
+player.events.on('playerSkip', async (queue, track) =>  {
+    await apiService.deleteLastRequest();
+    queue.metadata.channel.send(`Skipped **${track.title}**!`);
     return queue;
 });
 player.events.on('error', (queue, error) => {
@@ -46,11 +51,9 @@ player.events.on('playerError', (queue, error) => {
 });
 
 
-
-
-
 client.once("ready", async () => {
     console.log('Bot is ready!');
+    await apiService.clearQueue()
    
 
     const guild_ids = client.guilds.cache.map(guild => guild.id);
