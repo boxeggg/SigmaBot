@@ -31,12 +31,35 @@ for (const file of commandFiles) {
     }
 }
 player.events.on('playerStart', async (queue, track) =>  {
+    if(queue.repeatMode === 2){
+        await apiService.addRequest({
+        Name: track.title,
+        Url: track.url,
+        User: track.requestedBy
+        })
+    await apiService.deleteLastRequest();
+    }
+    if(queue.repeatMode === 0)
+    {
+        await apiService.deleteLastRequest();
+    }   
     queue.metadata.channel.send(`Started playing **${track.title}**!`);
     return queue;
 });
 player.events.on('playerSkip', async (queue, track) =>  {
+    if(queue.repeatMode === 2){
+        await apiService.addRequest({
+            Name: track.title,
+            Url: track.url,
+            User: track.requestedBy
+    })
+    
     await apiService.deleteLastRequest();
-    queue.metadata.channel.send(`Skipped **${track.title}**!`);
+    }
+    if(queue.repeatMode === 0)
+    {
+        await apiService.deleteLastRequest();
+    }
     return queue;
 });
 player.events.on('error', (queue, error) => {
