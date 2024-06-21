@@ -17,26 +17,9 @@ class ApiService {
         return this.instance;
     }
 
-    async getLastRequest() {
-        try {
-            const response = await axios.get(`http://${this.url}/api/Request/last`);
-            return response.data;
-        } catch (error) {
-            return this.handleError(error);
-        }
-    }
     async clearQueue() {
         try {
             const response = await axios.delete(`http://${this.url}/api/Request/clear`);
-            return response.data;
-        } catch (error) {
-            return this.handleError(error);
-        }
-    }
-
-    async getAllRequest() {
-        try {
-            const response = await axios.get(`http://${this.url}/api/Request/all`);
             return response.data;
         } catch (error) {
             return this.handleError(error);
@@ -64,12 +47,16 @@ class ApiService {
     async getStatus() {
         try {
             const response = await axios.get(`http://${this.url}/api/Status`);
-            return response.data;
+            return {
+               status: true,
+               message: response.data
+            }
+
         } catch (error) {
             return this.handleError(error);
         }
     }
-
+    
     async updateStatus(status) {
         try {
             const response = await axios.patch(`http://${this.url}/api/Status`, status);
@@ -94,6 +81,35 @@ class ApiService {
         } catch (error) {
             return this.handleError(error);
         }
+    }
+    async setGuildId(id) {
+        await this.updateStatus({
+            GuildId: id
+        });
+    }
+    
+    async setLoopMode(mode) {
+        await this.updateStatus({
+            LoopMode: mode
+        });
+    }
+    
+    async setOnVoiceChannel(isOn) {
+        await this.updateStatus({
+            OnVoiceChannel: isOn
+        });
+    }
+    
+    async setVolume(volume) {
+        await this.updateStatus({
+            Volume: volume
+        });
+    }
+    
+    async setSkipQueued(skip) {
+        await this.updateStatus({
+            SkipQueued: skip
+        });
     }
 
     handleError(error) {

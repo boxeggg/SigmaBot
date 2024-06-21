@@ -5,10 +5,10 @@ let apiService = ApiService.getInstance("localhost:5205")
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("play")
-        .setDescription("Play a song from YouTube.").addSubcommand(subcommand =>
+        .setDescription("Play a song or playlist").addSubcommand(subcommand =>
             subcommand
                 .setName("song")
-                .setDescription("Plays a single song from YouTube.")
+                .setDescription("Plays a song or playlist from any service.")
                 .addStringOption(option => option.setName("url").setDescription("The song's URL.").setRequired(true))
         ),
     execute: async ({interaction }) => {
@@ -21,8 +21,8 @@ module.exports = {
 
         if (interaction.options.getSubcommand() === "song") {
             try {
-            let search = await player.search(interaction.options.getString("url", true))
-            if(search.hasPlaylist()){
+                let search = await player.search(interaction.options.getString("url", true))
+                if(search.hasPlaylist()){
                 trackPlaylist = [];
                 for(i = 0; i<search.tracks.length;i++){
                     trackPlaylist.push({
@@ -30,7 +30,7 @@ module.exports = {
                         Url: search.tracks[i].url,
                         User: interaction.member.displayName
                     })}
-                response = await  apiService.addPlaylist(trackPlaylist);
+                response = await apiService.addPlaylist(trackPlaylist);
                 console.log(response);
                 interaction.followUp(`**${search.playlist.title}** enqueued!`);
                 }          
@@ -40,18 +40,20 @@ module.exports = {
                     Url: interaction.options.getString("url", true),
                     User: interaction.member.displayName
                 })
+                console.log(response);
                 
                 interaction.followUp(`**${search.tracks[0].title}** enqueued!`);
         
 
             }
-                let query = await apiService.getLastRequest()
-                const { track } = await player.play(channel, search, {
+                
+            const { track } = await player.play(channel, search.query, {
                     nodeOptions: {
                         metadata: interaction 
                     }
                 });
-            } catch (error) {
+            } 
+        catch (error) {
                 console.log(error);
                 return interaction.followUp(`Cant play a track`);
                 

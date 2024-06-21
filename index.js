@@ -14,7 +14,6 @@ const client = new Client({
 });
 const player =  new Player(client);
 player.extractors.loadDefault((ext) => ext);
-
 const commands = [];
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, "commands");
@@ -31,6 +30,10 @@ for (const file of commandFiles) {
     }
 }
 player.events.on('playerStart', async (queue, track) =>  {
+    queue.metadata.channel.send(`Started playing **${track.title}**!`);
+    return queue;
+});
+player.events.on('playerFinish', async (queue, track) =>  {
     if(queue.repeatMode === 2){
         await apiService.addRequest({
         Name: track.title,

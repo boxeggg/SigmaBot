@@ -16,7 +16,6 @@ module.exports = {
                 )
         ),
     async execute({ interaction }) {
-        const player = useMainPlayer();
         const queue = useQueue(interaction.guild.id);
 
         if (!queue) {
