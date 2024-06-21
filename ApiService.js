@@ -83,33 +83,69 @@ class ApiService {
         }
     }
     async setGuildId(id) {
-        await this.updateStatus({
-            GuildId: id
-        });
+        try{
+        return await this.updateStatus(
+        [{
+            value:`${id}`,
+            path: "/GuildId",
+            op: "replace"
+        }]);
+        return response;
+        }
+        catch(error){
+            return this.handleError(error)
+
+        }
+
+        
     }
     
     async setLoopMode(mode) {
-        await this.updateStatus({
-            LoopMode: mode
-        });
+        try {
+            return await this.updateStatus([{
+                value: mode,
+                path: "/LoopMode",
+                op: "replace"
+            }]);
+        } catch (error) {
+            return this.handleError(error);
+        }
     }
     
     async setOnVoiceChannel(isOn) {
-        await this.updateStatus({
-            OnVoiceChannel: isOn
-        });
+        try {
+          return  await this.updateStatus([{
+                value: isOn,
+                path: "/OnVoiceChannel",
+                op: "replace"
+            }]);
+        } catch (error) {
+            return this.handleError(error);
+        }
     }
     
     async setVolume(volume) {
-        await this.updateStatus({
-            Volume: volume
-        });
+        try {
+           return await this.updateStatus([{
+                value: volume,
+                path: "/Volume",
+                op: "replace"
+            }]);
+        } catch (error) {
+            return this.handleError(error);
+        }
     }
     
     async setSkipQueued(skip) {
-        await this.updateStatus({
-            SkipQueued: skip
-        });
+        try {
+           return await this.updateStatus([{
+                value: skip,
+                path: "/SkipQueued",
+                op: "replace"
+           }]);
+        } catch (error) {
+            return this.handleError(error);
+        }
     }
 
     handleError(error) {

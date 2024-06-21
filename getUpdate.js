@@ -1,54 +1,66 @@
 const { ApiService } = require("./ApiService");
-const { GuildQueue, useQueue } = require("discord-player"); 
-let apiService = ApiService.getInstance();
+const { useQueue } = require("discord-player");
 
-async function pollStatus(previousStatus){
-    currentStatus = await apiService.getStatus()
-    currentStatus = currentStatus.message;
-    try{
-    if (currentStatus && JSON.stringify(currentStatus) !== JSON.stringify(previousStatus)) {
-        if (previousStatus.LoopMode !== currentStatus.LoopMode) {
-            onPropertyChange(currentStatus.GuildId, 'LoopMode', previousStatus.LoopMode, currentStatus.LoopMode);
+let apiService = ApiService.getInstance("localhost:5205");
+let previousStatus = null; 
+
+async function pollStatus() {
+    try {
+        const currentStatus = await apiService.getStatus();
+        const currentStatusMessage = currentStatus.message;
+
+        if (currentStatusMessage && JSON.stringify(currentStatusMessage) !== JSON.stringify(previousStatus)) {
+            if (previousStatus) {
+                if (previousStatus.loopMode !== currentStatusMessage.loopMode) {
+                    onPropertyChange(currentStatusMessage.guildId, 'LoopMode', previousStatus.loopMode, currentStatusMessage.loopMode);
+                }
+                if (previousStatus.volume !== currentStatusMessage.volume) {
+                    onPropertyChange(currentStatusMessage.guildId, 'Volume', previousStatus.volume, currentStatusMessage.volume);
+                }
+                if (previousStatus.skipQueued !== currentStatusMessage.skipQueued) {
+                    
+                    onPropertyChange(currentStatusMessage.guildId, 'SkipQueued', previousStatus.skipQueued, currentStatusMessage.skipQueued);
+                }
+            }
+
+            previousStatus = currentStatusMessage;
+        } else {
+            console.log("No changes");
         }
-        if (previousStatus.Volume !== currentStatus.Volume) {
-            onPropertyChange(currentStatus.GuildId, 'Volume', previousStatus.Volume, currentStatus.Volume);
-        }
-        if (previousStatus.SkipQueued !== currentStatus.SkipQueued) {
-            onPropertyChange(currentStatus.GuildId, 'SkipQueued', previousStatus.SkipQueued, currentStatus.SkipQueued);
-        }
-        previousStatus = currentStatus.message;
-    }
-    }
-    catch(error){
-        console.error('There was an error:', error);
+    } catch (error) {
+        console.error('There was an errror', error);
+    } finally {
+        setTimeout(pollStatus, 3000); 
     }
 }
 
-function onPropertyChange(guildId,property,oldValue, newValue){
+async function onPropertyChange(guildId, property, oldValue, newValue) {
     const queue = useQueue(guildId);
-    switch(property) {
+    switch (property) {
         case 'LoopMode':
-            switch (loopMode) {
-                case '0':
+            switch (newValue) {
+                case 0:
                     queue.setRepeatMode(0);
                     break;
-                case '1':
+                case 1:
                     queue.setRepeatMode(1);
                     break;
-                case '2':
+                case 2:
                     queue.setRepeatMode(2);
                     break;
                 default:
                     break;
             }
+            break;
         case 'Volume':
             // Dodaj logikę dla zmiany Volume
             console.log(`Zaktualizowano Volume: ${newValue}`);
             break;
         case 'SkipQueued':
-            if(oldValue){
+            if (newValue) {
                 queue.node.skip();
-                apiService.setSkipQueued(false)
+                let response = await apiService.setSkipQueued(false);
+                console.log(response);
             }
             console.log(`Zaktualizowano SkipQueued: ${newValue}`);
             break;
@@ -56,19 +68,5 @@ function onPropertyChange(guildId,property,oldValue, newValue){
             console.log(`Nieznana właściwość: ${property}`);
     }
 }
-async function getUpdate(){
-    let previousStatus = await apiService.getStatus()
-    setInterval(async () => {
-        if(previousStatus.status)
-        {
-            pollStatus(previousStatus.message)
-    
-        }
-        else
-        {
-            console.log("Cannot connect to the API:", previousStatus.message)
-        }
-    }, 3000)
-}
 
-module.exports = {getUpdate};
+module.exports = {pollStatus};

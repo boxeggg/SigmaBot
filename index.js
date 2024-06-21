@@ -3,7 +3,7 @@ require('dotenv').config();
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
-const { useMainPlayer } = require("discord-player");
+const { pollStatus } = require("./getUpdate.js")
 const { Player } = require("discord-player");
 const fs = require("node:fs");
 const path = require("node:path");
@@ -78,6 +78,7 @@ player.events.on('playerError', (queue, error) => {
 client.once("ready", async () => {
     console.log('Bot is ready!');
     await apiService.clearQueue()
+    await pollStatus();
    
 
     const guild_ids = client.guilds.cache.map(guild => guild.id);

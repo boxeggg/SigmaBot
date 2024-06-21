@@ -21,7 +21,9 @@ module.exports = {
 
         if (interaction.options.getSubcommand() === "song") {
             try {
-                let search = await player.search(interaction.options.getString("url", true))
+                let search = await player.search(interaction.options.getString("url", true));
+                let test = await apiService.setGuildId(interaction.guild.id);
+                console.log(test);
                 if(search.hasPlaylist()){
                 trackPlaylist = [];
                 for(i = 0; i<search.tracks.length;i++){
