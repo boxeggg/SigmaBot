@@ -1,7 +1,7 @@
 const { ApiService } = require("./ApiService");
 const { useQueue } = require("discord-player");
 
-let apiService = ApiService.getInstance("localhost:5205");
+let apiService = ApiService.getInstance(process.env.API_URL);
 let previousStatus = null; 
 
 async function pollStatus() {
@@ -60,7 +60,6 @@ async function onPropertyChange(guildId, property, oldValue, newValue) {
             if (newValue) {
                 queue.node.skip();
                 let response = await apiService.setSkipQueued(false);
-                console.log(response);
             }
             console.log(`Zaktualizowano SkipQueued: ${newValue}`);
             break;

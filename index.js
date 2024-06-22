@@ -8,7 +8,7 @@ const { Player } = require("discord-player");
 const fs = require("node:fs");
 const path = require("node:path");
 
-let apiService = ApiService.getInstance("localhost:5205")
+let apiService = ApiService.getInstance(process.env.API_URL)
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates]
 });
@@ -46,25 +46,9 @@ player.events.on('playerFinish', async (queue, track) =>  {
     {
         await apiService.deleteLastRequest();
     }   
-    queue.metadata.channel.send(`Started playing **${track.title}**!`);
     return queue;
 });
-player.events.on('playerSkip', async (queue, track) =>  {
-    if(queue.repeatMode === 2){
-        await apiService.addRequest({
-            Name: track.title,
-            Url: track.url,
-            User: track.requestedBy
-    })
-    
-    await apiService.deleteLastRequest();
-    }
-    if(queue.repeatMode === 0)
-    {
-        await apiService.deleteLastRequest();
-    }
-    return queue;
-});
+
 player.events.on('error', (queue, error) => {
     queue.metadata.channel.send(`**There was an error with playing ${track.name}**`);
     console.log(error);
@@ -77,8 +61,16 @@ player.events.on('playerError', (queue, error) => {
 
 client.once("ready", async () => {
     console.log('Bot is ready!');
-    await apiService.clearQueue()
-    await pollStatus();
+    try{
+        await apiService.clearQueue()
+        await pollStatus();
+        apiService.connection = true;
+        console.log("Estabilished API connection - Start polling");
+    }
+    catch(error){
+        console.log("API connection error: ", error.code);
+        console.log("Bot will continue to work without API connection");
+    }
    
 
     const guild_ids = client.guilds.cache.map(guild => guild.id);

@@ -1,6 +1,7 @@
 const axios = require("axios");
 
 class ApiService {
+    connection = false;
     constructor(url) {
         if (ApiService.instance) {
             return ApiService.instance;
@@ -15,6 +16,14 @@ class ApiService {
             this.instance = new ApiService(url);
         }
         return this.instance;
+    }
+    async getLastRequest() {
+        try {
+            const response = await axios.get(`http://${this.url}/api/Request/last`);
+            return response.data;
+        } catch (error) {
+            return this.handleError(error);
+        }
     }
 
     async clearQueue() {
@@ -90,7 +99,7 @@ class ApiService {
             path: "/GuildId",
             op: "replace"
         }]);
-        return response;
+        
         }
         catch(error){
             return this.handleError(error)
@@ -114,7 +123,7 @@ class ApiService {
     
     async setOnVoiceChannel(isOn) {
         try {
-          return  await this.updateStatus([{
+          return await this.updateStatus([{
                 value: isOn,
                 path: "/OnVoiceChannel",
                 op: "replace"
@@ -149,22 +158,8 @@ class ApiService {
     }
 
     handleError(error) {
-        if (error.response) {
-            return {
-                status: false,
-                message: error.response.data || error.message
-            };
-        } else if (error.request) {
-            return {
-                status: false,
-                message: 'No response received from server'
-            };
-        } else {
-            return {
-                status: false,
-                message: error.message
-            };
-        }
+        throw error;
+
     }
 }
 
