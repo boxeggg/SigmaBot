@@ -34,6 +34,7 @@ player.events.on('playerStart', async (queue, track) =>  {
     return queue;
 });
 player.events.on('playerFinish', async (queue, track) =>  {
+    if(apiService.connection){
     if(queue.repeatMode === 2){
         await apiService.addRequest({
         Name: track.title,
@@ -45,7 +46,8 @@ player.events.on('playerFinish', async (queue, track) =>  {
     if(queue.repeatMode === 0)
     {
         await apiService.deleteLastRequest();
-    }   
+    }
+    }
     return queue;
 });
 

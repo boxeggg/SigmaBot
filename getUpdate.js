@@ -53,18 +53,18 @@ async function onPropertyChange(guildId, property, oldValue, newValue) {
             }
             break;
         case 'Volume':
-            // Dodaj logikę dla zmiany Volume
-            console.log(`Zaktualizowano Volume: ${newValue}`);
+            queue.node.setVolume(newValue);
+            console.log(`Volume: ${newValue}`);
             break;
         case 'SkipQueued':
             if (newValue) {
                 queue.node.skip();
-                let response = await apiService.setSkipQueued(false);
+                await apiService.setSkipQueued(false);
             }
-            console.log(`Zaktualizowano SkipQueued: ${newValue}`);
+            console.log(`SkipQueued: ${newValue}`);
             break;
         default:
-            console.log(`Nieznana właściwość: ${property}`);
+            console.log(`cannot set property of name ${property}`);
     }
 }
 
