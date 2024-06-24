@@ -60,7 +60,7 @@ module.exports = {
                         metadata: interaction
                     }
                 });
-                if(query.hasPlaylist)
+                if(query.hasPlaylist())
                 {
                     interaction.followUp(`**${query.playlist.title}** enqueued!`);
                 }

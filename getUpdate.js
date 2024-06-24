@@ -12,6 +12,7 @@ async function pollStatus() {
         if (currentStatusMessage && JSON.stringify(currentStatusMessage) !== JSON.stringify(previousStatus)) {
             if (previousStatus) {
                 if (previousStatus.loopMode !== currentStatusMessage.loopMode) {
+                    console.log("hello world")
                     onPropertyChange(currentStatusMessage.guildId, 'LoopMode', previousStatus.loopMode, currentStatusMessage.loopMode);
                 }
                 if (previousStatus.volume !== currentStatusMessage.volume) {
@@ -41,12 +42,15 @@ async function onPropertyChange(guildId, property, oldValue, newValue) {
             switch (newValue) {
                 case 0:
                     queue.setRepeatMode(0);
+                    console.log(`LoopMode: ${newValue}`);
                     break;
                 case 1:
                     queue.setRepeatMode(1);
+                    console.log(`LoopMode: ${newValue}`);
                     break;
                 case 2:
                     queue.setRepeatMode(2);
+                    console.log(`LoopMode: ${newValue}`);
                     break;
                 default:
                     break;

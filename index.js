@@ -34,13 +34,16 @@ player.events.on('playerStart', async (queue, track) =>  {
     return queue;
 });
 player.events.on('playerFinish', async (queue, track) =>  {
+    console.log("finish");
     if(apiService.connection){
+    let requestedBy = await apiService.getLastRequest()
+    requestedBy = requestedBy.user;
     if(queue.repeatMode === 2){
         await apiService.addRequest({
         Name: track.title,
         Url: track.url,
-        User: track.requestedBy
-        })
+        User: requestedBy
+    });
     await apiService.deleteLastRequest();
     }
     if(queue.repeatMode === 0)
