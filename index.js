@@ -34,7 +34,6 @@ player.events.on('playerStart', async (queue, track) =>  {
     return queue;
 });
 player.events.on('playerFinish', async (queue, track) =>  {
-    console.log("finish");
     if(apiService.connection){
     let requestedBy = await apiService.getLastRequest()
     requestedBy = requestedBy.user;
@@ -62,12 +61,21 @@ player.events.on('playerError', (queue, error) => {
     queue.metadata.channel.send(`**Cant find your video or it is NSFW**`);
     console.log(error);
 });
+player.events.on('disconnect', async (queue) => {
+    if(apiService.connection){
+        await apiService.setOnVoiceChannel(false);
+        await apiService.clearQueue();
+        await apiService.resetStatus();
+    }
+    queue.metadata.channel.send('**No music found in queue, leaving the voice channel...**');
+});
 
 
 client.once("ready", async () => {
     console.log('Bot is ready!');
     try{
         await apiService.clearQueue()
+        await apiService.resetStatus();
         await pollStatus();
         apiService.connection = true;
         console.log("Estabilished API connection - Start polling");

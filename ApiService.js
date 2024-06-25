@@ -65,6 +65,19 @@ class ApiService {
             return this.handleError(error);
         }
     }
+    async resetStatus(){
+        try {
+            const response = await axios.put(`http://${this.url}/api/Status`);
+            return {
+               status: true,
+               message: response.data
+            }
+
+        } catch (error) {
+            return this.handleError(error);
+        }
+
+    }
     
     async updateStatus(status) {
         try {

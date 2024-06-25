@@ -9,7 +9,7 @@ async function pollStatus() {
         const currentStatus = await apiService.getStatus();
         const currentStatusMessage = currentStatus.message;
 
-        if (currentStatusMessage && JSON.stringify(currentStatusMessage) !== JSON.stringify(previousStatus)) {
+        if (currentStatusMessage && JSON.stringify(currentStatusMessage) !== JSON.stringify(previousStatus) && currentStatusMessage.onVoiceChannel) {
             if (previousStatus) {
                 if (previousStatus.loopMode !== currentStatusMessage.loopMode) {
                     console.log("hello world")

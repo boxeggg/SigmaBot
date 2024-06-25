@@ -51,6 +51,7 @@ module.exports = {
                             metadata: interaction
                         }
                     });
+                    await apiService.setOnVoiceChannel(true);
                 }
                 else
                 {
