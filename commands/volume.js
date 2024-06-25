@@ -1,9 +1,9 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageEmbed } = require("discord.js")
+
 const { GuildQueue, useQueue } = require("discord-player"); 
 const { ApiService } = require("../ApiService");
 
-let apiService = ApiService.getInstance(process.env.API_URL)
+let apiService = ApiService.getInstance(process.env.API_URL);
 
 module.exports = {
 	data: new SlashCommandBuilder()

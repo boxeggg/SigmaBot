@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageEmbed } = require("discord.js")
+
 const { GuildQueue, useQueue } = require("discord-player"); 
 const { ApiService } = require("../ApiService");
 
