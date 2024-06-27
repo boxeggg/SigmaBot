@@ -19,7 +19,7 @@ class ApiService {
     }
     async getLastRequest() {
         try {
-            const response = await axios.get(`http://${this.url}/api/Request/last`);
+            const response = await axios.get(`https://${this.url}/api/Request/last`);
             return response.data;
         } catch (error) {
             return this.handleError(error);
@@ -28,7 +28,7 @@ class ApiService {
 
     async clearQueue() {
         try {
-            const response = await axios.delete(`http://${this.url}/api/Request/clear`);
+            const response = await axios.delete(`https://${this.url}/api/Request/clear`);
             return response.data;
         } catch (error) {
             return this.handleError(error);
@@ -37,7 +37,7 @@ class ApiService {
 
     async deleteLastRequest() {
         try {
-            const response = await axios.delete(`http://${this.url}/api/Request/last`);
+            const response = await axios.delete(`https://${this.url}/api/Request/last`);
             return response.data;
         } catch (error) {
             return this.handleError(error);
@@ -46,7 +46,7 @@ class ApiService {
 
     async getRequestCount() {
         try {
-            const response = await axios.get(`http://${this.url}/api/Request/count`);
+            const response = await axios.get(`https://${this.url}/api/Request/count`);
             return response.data;
         } catch (error) {
             return this.handleError(error);
@@ -55,7 +55,7 @@ class ApiService {
 
     async getStatus() {
         try {
-            const response = await axios.get(`http://${this.url}/api/Status`);
+            const response = await axios.get(`https://${this.url}/api/Status`);
             return {
                status: true,
                message: response.data
@@ -67,7 +67,7 @@ class ApiService {
     }
     async resetStatus(){
         try {
-            const response = await axios.put(`http://${this.url}/api/Status`);
+            const response = await axios.put(`https://${this.url}/api/Status`);
             return {
                status: true,
                message: response.data
@@ -81,7 +81,7 @@ class ApiService {
     
     async updateStatus(status) {
         try {
-            const response = await axios.patch(`http://${this.url}/api/Status`, status);
+            const response = await axios.patch(`https://${this.url}/api/Status`, status);
             return response.data;
         } catch (error) {
             return this.handleError(error);
@@ -90,7 +90,7 @@ class ApiService {
 
     async addRequest(request) {
         try {
-            const response = await axios.post(`http://${this.url}/api/Request/new`, request);
+            const response = await axios.post(`https://${this.url}/api/Request/new`, request);
             return response.data;
         } catch (error) {
             return this.handleError(error);
@@ -98,7 +98,7 @@ class ApiService {
     }
     async addPlaylist(request) {
         try {
-            const response = await axios.post(`http://${this.url}/api/Request/playlist`, request);
+            const response = await axios.post(`https://${this.url}/api/Request/playlist`, request);
             return response.data;
         } catch (error) {
             return this.handleError(error);

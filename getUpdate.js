@@ -12,7 +12,6 @@ async function pollStatus() {
         if (currentStatusMessage && JSON.stringify(currentStatusMessage) !== JSON.stringify(previousStatus) && currentStatusMessage.onVoiceChannel) {
             if (previousStatus) {
                 if (previousStatus.loopMode !== currentStatusMessage.loopMode) {
-                    console.log("hello world")
                     onPropertyChange(currentStatusMessage.guildId, 'LoopMode', previousStatus.loopMode, currentStatusMessage.loopMode);
                 }
                 if (previousStatus.volume !== currentStatusMessage.volume) {
@@ -27,7 +26,6 @@ async function pollStatus() {
         previousStatus = currentStatusMessage;
         setTimeout(pollStatus, 3000); 
         } else {
-            console.log("No changes");
             setTimeout(pollStatus, 3000); 
         }
     } catch (error) {

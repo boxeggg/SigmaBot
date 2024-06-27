@@ -45,7 +45,7 @@ module.exports = {
                             Name: search.tracks[0].title,
                             Url: interaction.options.getString("url", true),
                             User: interaction.member.displayName,
-                            thumbnail_Url: search.tracks[0].thumbnail.url
+                            thumbnail_Url: search.tracks[0].thumbnail
                         })
                         await apiService.setGuildId(interaction.guild.id);
                         interaction.followUp(`**${search.tracks[0].title}** enqueued!`);

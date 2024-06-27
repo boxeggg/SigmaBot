@@ -12,6 +12,8 @@ let apiService = ApiService.getInstance(process.env.API_URL)
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates]
 });
+
+
 const player =  new Player(client);
 player.extractors.loadDefault((ext) => ext);
 const commands = [];
@@ -73,6 +75,8 @@ player.events.on('disconnect', async (queue) => {
 
 
 client.once("ready", async () => {
+
+    client.user.setActivity('Use /play 🤫🧏🏻‍♂️');
     console.log('Bot is ready!');
     try{
         await apiService.clearQueue()
