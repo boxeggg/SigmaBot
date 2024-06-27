@@ -23,13 +23,16 @@ module.exports = {
             try {
                 if (apiService.connection) {
                     let search = await player.search(interaction.options.getString("url", true));
+                    
                     if (search.hasPlaylist()) {
+                        
                         trackPlaylist = [];
-                        for (i = 0; i < search.tracks.length; i++) {
+                        for (let i = 0; i < search.tracks.length; i++) {
                             trackPlaylist.push({
                                 Name: search.tracks[i].title,
                                 Url: search.tracks[i].url,
-                                User: interaction.member.displayName
+                                User: interaction.member.displayName,
+                                Thumbnail_Url: search.tracks[i].thumbnail
                             }
                             )
                         }
@@ -41,7 +44,8 @@ module.exports = {
                         response = await apiService.addRequest({
                             Name: search.tracks[0].title,
                             Url: interaction.options.getString("url", true),
-                            User: interaction.member.displayName
+                            User: interaction.member.displayName,
+                            thumbnail_Url: search.tracks[0].thumbnail.url
                         })
                         await apiService.setGuildId(interaction.guild.id);
                         interaction.followUp(`**${search.tracks[0].title}** enqueued!`);

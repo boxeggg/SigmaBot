@@ -41,7 +41,8 @@ player.events.on('playerFinish', async (queue, track) =>  {
         await apiService.addRequest({
         Name: track.title,
         Url: track.url,
-        User: requestedBy
+        User: requestedBy,
+        thumbnail_Url: search.tracks[i].thumbnail
     });
     await apiService.deleteLastRequest();
     }
@@ -82,11 +83,9 @@ client.once("ready", async () => {
     catch(error){
         console.log("API connection error: ", error.code);
         console.log("Bot will continue to work without API connection");
-        return;
     }
-    finally{
-        await pollStatus();
-    }
+    if(apiService.connection) await pollStatus();
+  
    
 
     const guild_ids = client.guilds.cache.map(guild => guild.id);
