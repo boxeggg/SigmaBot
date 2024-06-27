@@ -76,13 +76,16 @@ client.once("ready", async () => {
     try{
         await apiService.clearQueue()
         await apiService.resetStatus();
-        await pollStatus();
         apiService.connection = true;
         console.log("Estabilished API connection - Start polling");
     }
     catch(error){
         console.log("API connection error: ", error.code);
         console.log("Bot will continue to work without API connection");
+        return;
+    }
+    finally{
+        await pollStatus();
     }
    
 

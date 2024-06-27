@@ -24,15 +24,17 @@ async function pollStatus() {
                 }
             }
 
-            previousStatus = currentStatusMessage;
+        previousStatus = currentStatusMessage;
+        setTimeout(pollStatus, 3000); 
         } else {
             console.log("No changes");
+            setTimeout(pollStatus, 3000); 
         }
     } catch (error) {
-        console.error('There was an errror', error);
-    } finally {
-        setTimeout(pollStatus, 3000); 
-    }
+        console.error('There was an error: ', error.code);
+        console.log("Bot will continue to work without API connection");
+        apiService.connection = false;
+    } 
 }
 
 async function onPropertyChange(guildId, property, oldValue, newValue) {
