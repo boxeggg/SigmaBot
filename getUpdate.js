@@ -8,6 +8,7 @@ async function pollStatus() {
     try {
         const currentStatus = await apiService.getStatus();
         const currentStatusMessage = currentStatus.message;
+        if(currentStatusMessage.onVoiceChannel){
 
         if (currentStatusMessage && JSON.stringify(currentStatusMessage) !== JSON.stringify(previousStatus) && currentStatusMessage.onVoiceChannel) {
             if (previousStatus) {
@@ -25,9 +26,12 @@ async function pollStatus() {
 
         previousStatus = currentStatusMessage;
         setTimeout(pollStatus, 3000); 
-        } else {
-            setTimeout(pollStatus, 3000); 
         }
+         else {
+            console.log("No change")
+            setTimeout(pollStatus, 3000); 
+        }}
+        else return;
     } catch (error) {
         console.error('There was an error: ', error.code);
         console.log("Bot will continue to work without API connection");

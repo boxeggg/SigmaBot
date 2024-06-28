@@ -13,7 +13,7 @@ module.exports = {
         const queue = useQueue(interaction.guild.id);
         if(apiService.connection)
         {
-                await apiService.setSkipQueued(true)
+                await apiService.setSkipQueued(true);
                 return interaction.reply(`Skipped **${queue.currentTrack.title}**!`);
         }
         else

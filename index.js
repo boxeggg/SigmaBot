@@ -56,11 +56,12 @@ player.events.on('playerFinish', async (queue, track) =>  {
     return queue;
 });
 
-player.events.on('error', (queue, error) => {
+player.events.on('error',  async (queue, error) => {
     queue.metadata.channel.send(`**There was an error with playing ${track.name}**`);
     console.log(error);
 });
-player.events.on('playerError', (queue, error) => {
+player.events.on('playerError', async  (queue, error) => {
+    await apiService.deleteLastRequest();
     queue.metadata.channel.send(`**Cant find your video or it is NSFW**`);
     console.log(error);
 });
@@ -82,13 +83,13 @@ client.once("ready", async () => {
         await apiService.clearQueue()
         await apiService.resetStatus();
         apiService.connection = true;
-        console.log("Estabilished API connection - Start polling");
+        console.log("Estabilished API connection");
     }
     catch(error){
         console.log("API connection error: ", error.code);
         console.log("Bot will continue to work without API connection");
     }
-    if(apiService.connection) await pollStatus();
+   
   
    
 

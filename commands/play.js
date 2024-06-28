@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { useMainPlayer, SearchResult, GuildQueue, useQueue } = require("discord-player");
 const { ApiService } = require("../ApiService");
+const { pollStatus } = require("../getUpdate");
 let apiService = ApiService.getInstance(process.env.API_URL);
 module.exports = {
     data: new SlashCommandBuilder()
@@ -23,7 +24,6 @@ module.exports = {
             try {
                 if (apiService.connection) {
                     let search = await player.search(interaction.options.getString("url", true));
-                    
                     if (search.hasPlaylist()) {
                         
                         trackPlaylist = [];
@@ -56,6 +56,9 @@ module.exports = {
                         }
                     });
                     await apiService.setOnVoiceChannel(true);
+                    await pollStatus();
+                    console.log("Polling status")
+                    
                 }
                 else
                 {
