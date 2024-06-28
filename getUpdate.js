@@ -36,6 +36,7 @@ async function pollStatus() {
         console.error('There was an error: ', error.code);
         console.log("Bot will continue to work without API connection");
         apiService.connection = false;
+        apiService.isPolling = false;
     } 
 }
 

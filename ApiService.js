@@ -2,6 +2,7 @@ const axios = require("axios");
 
 class ApiService {
     connection = false;
+    isPolling = false;
     constructor(url) {
         if (ApiService.instance) {
             return ApiService.instance;

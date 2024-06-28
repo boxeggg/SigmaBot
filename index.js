@@ -70,6 +70,7 @@ player.events.on('disconnect', async (queue) => {
         await apiService.setOnVoiceChannel(false);
         await apiService.clearQueue();
         await apiService.resetStatus();
+        apiService.isPolling = false;
     }
     queue.metadata.channel.send('**No music found in queue, leaving the voice channel...**');
 });

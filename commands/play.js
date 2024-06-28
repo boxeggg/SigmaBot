@@ -19,7 +19,6 @@ module.exports = {
         const player = useMainPlayer();
         const channel = interaction.member.voice.channel;
         await interaction.deferReply();
-
         if (interaction.options.getSubcommand() === "song") {
             try {
                 if (apiService.connection) {
@@ -55,9 +54,14 @@ module.exports = {
                             metadata: interaction
                         }
                     });
+                    if(!apiService.isPolling)
+                    {
                     await apiService.setOnVoiceChannel(true);
                     await pollStatus();
-                    console.log("Polling status")
+                    console.log("Polling status");
+                    apiService.isPolling = true;
+                    }
+                    
                     
                 }
                 else
