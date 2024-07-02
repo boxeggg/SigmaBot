@@ -23,14 +23,15 @@ player.events.on('playerStart', async (queue, track) =>  {
 });
 player.events.on('playerFinish', async (queue, track) =>  {
     if(apiService.connection){
-    let requestedBy = await apiService.getLastRequest()
-    requestedBy = requestedBy.user;
     if(queue.repeatMode === 2){
+        let lastTrack = await apiService.getLastRequest()
+        requestedBy = lastTrack.user;
+        thumbnail = lastTrack.thumbnail_Url;
         await apiService.addRequest({
         Name: track.title,
         Url: track.url,
         User: requestedBy,
-        thumbnail_Url: search.tracks[i].thumbnail
+        thumbnail_Url: thumbnail
     });
     await apiService.deleteLastRequest();
     }
@@ -77,12 +78,11 @@ for (const file of commandFiles) {
         console.error(`The command at ${filePath} is missing a required "data" or "execute" property.`);
     }
 }}
-const registerCommands = async () => {
+const registerCommands = async (guildId) => {
     const commands = client.commands.map(cmd => cmd.data.toJSON());
     const guild_ids = client.guilds.cache.map(guild => guild.id);
     const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
 
-    for (const guildId of guild_ids) {
         try {
             await rest.put(
                 Routes.applicationGuildCommands(process.env.CLIENT_ID, guildId),
@@ -92,7 +92,7 @@ const registerCommands = async () => {
         } catch (error) {
             console.error(`Failed to add commands to guild ${guildId}`, error);
         }
-    }
+    
 }
 client.once("ready", async () => {
 
@@ -109,7 +109,7 @@ client.once("ready", async () => {
         console.log("Bot will continue to work without API connection");
     }
     loadCommands();
-    await registerCommands();
+    
 
 });
 client.on('guildCreate', async guild => {
