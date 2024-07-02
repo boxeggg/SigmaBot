@@ -1,9 +1,9 @@
-const { ApiService } = require("./ApiService.js");
+const { ApiService } = require("./utilis/ApiService.js");
 require('dotenv').config();
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
-const { pollStatus } = require("./getUpdate.js")
+const { pollStatus } = require("./utilis/getUpdate.js")
 const { Player } = require("discord-player");
 const fs = require("node:fs");
 const path = require("node:path");
@@ -16,21 +16,7 @@ const client = new Client({
 
 const player =  new Player(client);
 player.extractors.loadDefault((ext) => ext);
-const commands = [];
-client.commands = new Collection();
-const commandsPath = path.join(__dirname, "commands");
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(".js"));
 
-for (const file of commandFiles) {
-    const filePath = path.join(commandsPath, file);
-    const command = require(filePath);
-    if ('data' in command && 'execute' in command) {
-        client.commands.set(command.data.name, command);
-        commands.push(command.data.toJSON());
-    } else {
-        console.error(`The command at ${filePath} is missing a required "data" or "execute" property.`);
-    }
-}
 player.events.on('playerStart', async (queue, track) =>  {
     queue.metadata.channel.send(`Started playing **${track.title}**!`);
     return queue;
@@ -75,25 +61,24 @@ player.events.on('disconnect', async (queue) => {
     queue.metadata.channel.send('**No music found in queue, leaving the voice channel...**');
 });
 
+const loadCommands = () => {
+const commands = [];
+client.commands = new Collection();
+const commandsPath = path.join(__dirname, "commands");
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(".js"));
 
-client.once("ready", async () => {
-
-    client.user.setActivity('Use /play 🤫🧏🏻‍♂️');
-    console.log('Bot is ready!');
-    try{
-        await apiService.clearQueue()
-        await apiService.resetStatus();
-        apiService.connection = true;
-        console.log("Estabilished API connection");
+for (const file of commandFiles) {
+    const filePath = path.join(commandsPath, file);
+    const command = require(filePath);
+    if ('data' in command && 'execute' in command) {
+        client.commands.set(command.data.name, command);
+        commands.push(command.data.toJSON());
+    } else {
+        console.error(`The command at ${filePath} is missing a required "data" or "execute" property.`);
     }
-    catch(error){
-        console.log("API connection error: ", error.code);
-        console.log("Bot will continue to work without API connection");
-    }
-   
-  
-   
-
+}}
+const registerCommands = async () => {
+    const commands = client.commands.map(cmd => cmd.data.toJSON());
     const guild_ids = client.guilds.cache.map(guild => guild.id);
     const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
 
@@ -108,9 +93,36 @@ client.once("ready", async () => {
             console.error(`Failed to add commands to guild ${guildId}`, error);
         }
     }
+}
+client.once("ready", async () => {
+
+    client.user.setActivity('Use /play 🤫🧏🏻‍♂️');
+    console.log('Bot is ready!');
+    try{
+        await apiService.clearQueue()
+        await apiService.resetStatus();
+        apiService.connection = true;
+        console.log("Estabilished API connection");
+    }
+    catch(error){
+        console.log("API connection error: ", error.code);
+        console.log("Bot will continue to work without API connection");
+    }
+    loadCommands();
+    await registerCommands();
+
 });
+client.on('guildCreate', async guild => {
+    await registerCommands(guild.id);
+});
+   
+  
+   
+
+
 
 client.on("interactionCreate", async interaction => {
+    
     if (!interaction.isCommand()) return;
     
     const command = client.commands.get(interaction.commandName);

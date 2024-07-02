@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
 
 const { GuildQueue, useQueue } = require("discord-player"); 
-const { ApiService } = require("../ApiService");
+const { ApiService } = require("../utilis/ApiService");
 
 let apiService = ApiService.getInstance(process.env.API_URL);
 

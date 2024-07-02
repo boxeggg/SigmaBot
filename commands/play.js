@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { useMainPlayer, SearchResult, GuildQueue, useQueue } = require("discord-player");
-const { ApiService } = require("../ApiService");
-const { pollStatus } = require("../getUpdate");
+const { ApiService } = require("../utilis/ApiService");
+const { pollStatus } = require("../utilis/getUpdate");
 let apiService = ApiService.getInstance(process.env.API_URL);
 module.exports = {
     data: new SlashCommandBuilder()
