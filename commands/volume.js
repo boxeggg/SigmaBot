@@ -12,6 +12,8 @@ module.exports = {
 	execute: async ({ interaction }) => {
         const queue = useQueue(interaction.guild.id);
         const value = interaction.options.getInteger("value", true)
+        if (!interaction.member.voice.channel) return interaction.reply("You need to be in a Voice Channel to set a volume.");
+        if (!queue) return interaction.reply("There is no music in queue");
         if(apiService.connection)
         {          
                 await apiService.setVolume(value)

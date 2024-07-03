@@ -2,7 +2,10 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { useMainPlayer, SearchResult, GuildQueue, useQueue } = require("discord-player");
 const { ApiService } = require("../utilis/ApiService");
 const { pollStatus } = require("../utilis/getUpdate");
+const { Logger } = require("../utilis/Logger.js");
+const logger = Logger.getLogger()
 let apiService = ApiService.getInstance(process.env.API_URL);
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("play")
@@ -58,7 +61,7 @@ module.exports = {
                     {
                     await apiService.setOnVoiceChannel(true);
                     await pollStatus();
-                    console.log("Polling status");
+                    logger.logInfo("Polling status");
                     apiService.isPolling = true;
                     }
                     
@@ -83,7 +86,7 @@ module.exports = {
                 }
             }
             catch (error) {
-                console.log(error);
+                logger.logError(error);
                 return interaction.followUp(`Cant play a track`);
 
             }

@@ -1,5 +1,7 @@
 const { ApiService } = require("./ApiService");
 const { useQueue } = require("discord-player");
+const { Logger } = require("../utilis/Logger.js");
+const logger = Logger.getLogger()
 
 let apiService = ApiService.getInstance(process.env.API_URL);
 let previousStatus = null; 
@@ -28,13 +30,13 @@ async function pollStatus() {
         setTimeout(pollStatus, 3000); 
         }
          else {
-            console.log("No change")
+            logger.logInfo("No change");
             setTimeout(pollStatus, 3000); 
         }}
         else return;
     } catch (error) {
-        console.error('There was an error: ', error.code);
-        console.log("Bot will continue to work without API connection");
+        logger.logError('There was an error: ', error.code);
+        logger.logWarn("Bot will continue to work without API connection");
         apiService.connection = false;
         apiService.isPolling = false;
     } 
@@ -47,15 +49,15 @@ async function onPropertyChange(guildId, property, oldValue, newValue) {
             switch (newValue) {
                 case 0:
                     queue.setRepeatMode(0);
-                    console.log(`LoopMode: ${newValue}`);
+                    logger.logInfo(`LoopMode: ${newValue}`);
                     break;
                 case 1:
                     queue.setRepeatMode(1);
-                    console.log(`LoopMode: ${newValue}`);
+                    logger.logInfo(`LoopMode: ${newValue}`);
                     break;
                 case 2:
                     queue.setRepeatMode(2);
-                    console.log(`LoopMode: ${newValue}`);
+                    logger.logInfo(`LoopMode: ${newValue}`);
                     break;
                 default:
                     break;
@@ -63,17 +65,17 @@ async function onPropertyChange(guildId, property, oldValue, newValue) {
             break;
         case 'Volume':
             queue.node.setVolume(newValue);
-            console.log(`Volume: ${newValue}`);
+            logger.logInfo(`Volume: ${newValue}`);
             break;
         case 'SkipQueued':
             if (newValue) {
                 queue.node.skip();
                 await apiService.setSkipQueued(false);
             }
-            console.log(`SkipQueued: ${newValue}`);
+            logger.logInfo(`SkipQueued: ${newValue}`);
             break;
         default:
-            console.log(`cannot set property of name ${property}`);
+            logger.logWarn(`cannot set property of name ${property}`);
     }
 }
 

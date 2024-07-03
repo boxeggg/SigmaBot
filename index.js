@@ -1,17 +1,17 @@
-const { ApiService } = require("./utilis/ApiService.js");
-require('dotenv').config();
-const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v9");
-const { Client, Collection, GatewayIntentBits } = require("discord.js");
-const { pollStatus } = require("./utilis/getUpdate.js")
-const { Player } = require("discord-player");
-const fs = require("node:fs");
-const path = require("node:path");
 
-let apiService = ApiService.getInstance(process.env.API_URL)
+require('dotenv').config();
+const { Client, GatewayIntentBits } = require("discord.js");
+const { Player } = require("discord-player");
+
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates]
 });
+const { loadCommands } = require("./utilis/loadCommands.js");
+const { registerCommands } = require("./utilis/registerCommands.js");
+const { Logger } = require("./utilis/Logger.js");
+const { ApiService } = require("./utilis/ApiService.js");
+let apiService = ApiService.getInstance(process.env.API_URL)
+const logger = Logger.getLogger();
 
 
 const player =  new Player(client);
@@ -62,58 +62,27 @@ player.events.on('disconnect', async (queue) => {
     queue.metadata.channel.send('**No music found in queue, leaving the voice channel...**');
 });
 
-const loadCommands = () => {
-const commands = [];
-client.commands = new Collection();
-const commandsPath = path.join(__dirname, "commands");
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith(".js"));
-
-for (const file of commandFiles) {
-    const filePath = path.join(commandsPath, file);
-    const command = require(filePath);
-    if ('data' in command && 'execute' in command) {
-        client.commands.set(command.data.name, command);
-        commands.push(command.data.toJSON());
-    } else {
-        console.error(`The command at ${filePath} is missing a required "data" or "execute" property.`);
-    }
-}}
-const registerCommands = async (guildId) => {
-    const commands = client.commands.map(cmd => cmd.data.toJSON());
-    const guild_ids = client.guilds.cache.map(guild => guild.id);
-    const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
-
-        try {
-            await rest.put(
-                Routes.applicationGuildCommands(process.env.CLIENT_ID, guildId),
-                { body: commands }
-            );
-            console.log(`Added commands to guild ${guildId}`);
-        } catch (error) {
-            console.error(`Failed to add commands to guild ${guildId}`, error);
-        }
-    
-}
 client.once("ready", async () => {
+    
 
     client.user.setActivity('Use /play 🤫🧏🏻‍♂️');
-    console.log('Bot is ready!');
+    logger.logInfo('Bot is ready!');
     try{
         await apiService.clearQueue()
         await apiService.resetStatus();
         apiService.connection = true;
-        console.log("Estabilished API connection");
+        logger.logInfo("Estabilished API connection");
     }
     catch(error){
-        console.log("API connection error: ", error.code);
-        console.log("Bot will continue to work without API connection");
+        logger.logError("API connection error: ", error.code);
+        logger.logWarn("Bot will continue to work without API connection");
     }
-    loadCommands();
+    loadCommands(client);
     
 
 });
 client.on('guildCreate', async guild => {
-    await registerCommands(guild.id);
+    await registerCommands(guild.id,client);
 });
    
   

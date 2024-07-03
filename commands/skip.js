@@ -11,6 +11,9 @@ module.exports = {
         .setDescription("Skips the current song"),
 	execute: async ({ interaction }) => {
         const queue = useQueue(interaction.guild.id);
+        if (!interaction.member.voice.channel) return interaction.reply("You need to be in a Voice Channel to skip a song.");
+        if (!queue) return interaction.reply("There is nothing to skip");
+        
         if(apiService.connection)
         {
                 await apiService.setSkipQueued(true);
