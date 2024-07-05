@@ -34,12 +34,13 @@ module.exports = {
                                 Name: search.tracks[i].title,
                                 Url: search.tracks[i].url,
                                 User: interaction.member.displayName,
-                                Thumbnail_Url: search.tracks[i].thumbnail
+                                Thumbnail_Url: search.tracks[i].thumbnail,
+                                GuildId: interaction.guild.id
                             }
                             )
                         }
                         response = await apiService.addPlaylist(trackPlaylist);
-                        await apiService.setGuildId(interaction.guild.id);
+                        
                         interaction.followUp(`**${search.playlist.title}** enqueued!`);
                     }
                     else {
@@ -47,9 +48,10 @@ module.exports = {
                             Name: search.tracks[0].title,
                             Url: interaction.options.getString("url", true),
                             User: interaction.member.displayName,
-                            thumbnail_Url: search.tracks[0].thumbnail
+                            thumbnail_Url: search.tracks[0].thumbnail,
+                            GuildId: interaction.guild.id
                         })
-                        await apiService.setGuildId(interaction.guild.id);
+                        
                         interaction.followUp(`**${search.tracks[0].title}** enqueued!`);
                     }
                     const { track } = await player.play(channel, search.query, {
@@ -59,9 +61,9 @@ module.exports = {
                     });
                     if(!apiService.isPolling)
                     {
-                    await apiService.setOnVoiceChannel(true);
-                    await pollStatus();
-                    logger.logInfo("Polling status");
+                    await apiService.setOnVoiceChannel(true,interaction.guild.id);
+                    await pollStatus(interaction.guild.id);
+                    logger.logInfo("Polling status",interaction.guild.id);
                     apiService.isPolling = true;
                     }
                     

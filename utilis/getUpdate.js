@@ -6,9 +6,9 @@ const logger = Logger.getLogger()
 let apiService = ApiService.getInstance(process.env.API_URL);
 let previousStatus = null; 
 
-async function pollStatus() {
+async function pollStatus(guildId) {
     try {
-        const currentStatus = await apiService.getStatus();
+        const currentStatus = await apiService.getStatus(guildId);
         const currentStatusMessage = currentStatus.message;
         if(currentStatusMessage.onVoiceChannel){
 
@@ -27,11 +27,11 @@ async function pollStatus() {
             }
 
         previousStatus = currentStatusMessage;
-        setTimeout(pollStatus, 3000); 
+        setTimeout(() => pollStatus(guildId), 3000); 
         }
          else {
-            logger.logInfo("No change");
-            setTimeout(pollStatus, 3000); 
+            logger.logInfo("No change",guildId);
+            setTimeout(() => pollStatus(guildId), 3000); 
         }}
         else return;
     } catch (error) {
@@ -49,15 +49,15 @@ async function onPropertyChange(guildId, property, oldValue, newValue) {
             switch (newValue) {
                 case 0:
                     queue.setRepeatMode(0);
-                    logger.logInfo(`LoopMode: ${newValue}`);
+                    logger.logInfo(`LoopMode: ${newValue}`,guildId);
                     break;
                 case 1:
                     queue.setRepeatMode(1);
-                    logger.logInfo(`LoopMode: ${newValue}`);
+                    logger.logInfo(`LoopMode: ${newValue}`,guildId);
                     break;
                 case 2:
                     queue.setRepeatMode(2);
-                    logger.logInfo(`LoopMode: ${newValue}`);
+                    logger.logInfo(`LoopMode: ${newValue}`,guildId);
                     break;
                 default:
                     break;
@@ -65,17 +65,17 @@ async function onPropertyChange(guildId, property, oldValue, newValue) {
             break;
         case 'Volume':
             queue.node.setVolume(newValue);
-            logger.logInfo(`Volume: ${newValue}`);
+            logger.logInfo(`Volume: ${newValue}`,guildId);
             break;
         case 'SkipQueued':
             if (newValue) {
                 queue.node.skip();
-                await apiService.setSkipQueued(false);
+                await apiService.setSkipQueued(false,guildId);
             }
-            logger.logInfo(`SkipQueued: ${newValue}`);
+            logger.logInfo(`SkipQueued: ${newValue}`,guildId);
             break;
         default:
-            logger.logWarn(`cannot set property of name ${property}`);
+            logger.logWarn(`cannot set property of name ${property}`,guildId);
     }
 }
 

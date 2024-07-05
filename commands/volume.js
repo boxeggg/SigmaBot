@@ -16,7 +16,7 @@ module.exports = {
         if (!queue) return interaction.reply("There is no music in queue");
         if(apiService.connection)
         {          
-                await apiService.setVolume(value)
+                await apiService.setVolume(value,interaction.guild.id)
                 return interaction.reply(`Changed volume to **${value}** !`);
         }
         else

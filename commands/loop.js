@@ -26,15 +26,15 @@ module.exports = {
         if (apiService.connection) { 
             switch (loopMode) {
                 case '0':
-                    apiService.setLoopMode(0)
+                    apiService.setLoopMode(0,interaction.guild.id)
                     await interaction.reply({ content: 'Looping is now off.' });
                     break;
                 case '1':
-                    apiService.setLoopMode(1)
+                    apiService.setLoopMode(1,interaction.guild.id)
                     await interaction.reply({ content: `Looping the current song:  **${queue.currentTrack.title}**` });
                     break;
                 case '2':
-                    apiService.setLoopMode(2)
+                    apiService.setLoopMode(2,interaction.guild.id)
                     await interaction.reply({ content: 'Looping the queue.' });
                     break;
                 default:

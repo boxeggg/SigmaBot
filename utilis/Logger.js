@@ -14,20 +14,20 @@ class Logger {
         return this.instance;
     }
 
-    logInfo(text) {
+    logInfo(text, guildId = "System") {
         let now = new Date();
         let currentTime = now.toLocaleTimeString();
-        console.log(`[${currentTime}] [Info]:  ${text}`);
+        console.log(`[${currentTime}] [Info] [${guildId}]:  ${text}`);
     }
-    logWarn(text) {
+    logWarn(text,guildId = "System") {
         let now = new Date();
         let currentTime = now.toLocaleTimeString();
-        console.log(`[${currentTime}] [Warn]:  ${text}`);
+        console.log(`[${currentTime}] [Warn] [${guildId}]:  ${text}`);
     }
-    logError(text) {
+    logError(text,guildId = "System") {
         let now = new Date();
         let currentTime = now.toLocaleTimeString();
-        console.log(`[${currentTime}] [Error]:  ${text}`);
+        console.log(`[${currentTime}] [Error] [${guildId}]:  ${text}`);
     }
 
 
