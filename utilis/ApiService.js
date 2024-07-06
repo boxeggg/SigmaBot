@@ -2,6 +2,8 @@ const axios = require("axios");
 const { Logger } = require("./Logger");
 
 class ApiService {
+    connection = true;
+    isPolling = false;
     constructor(url) {
         if (ApiService.instance) {
             return ApiService.instance;
@@ -66,29 +68,31 @@ class ApiService {
         }
     }
 
-    async getStatusWithCreate(guildId) {
+    async getStatusWithCreate(guildId,guildName) {
         try {
             let response = await axios.get(`http://${this.url}/api/Status`, { params: { guildId } });
             return response;
         } catch (error) {
-            if (error.response.status === 404) {
+            if (error.response && error.response.status === 404) {
                 try {
-                    await this.createStatus(guildId);
+                    await this.createStatus(guildId,guildName);
                     return await this.getStatus(guildId);
                     
                 } catch (createError) {
                     return this.handleError(`Failed to create or fetch status: ${createError.message}`);
                 }
             }
-            return this.handleError(`Failed to fetch status: ${error.message}`);
+            
+            return this.handleError(`Failed to fetch status: ${error}`);
         }
     }
 
-    async createStatus(guildId) {
+    async createStatus(guildId,guildName) {
         try {
             const response = await axios.post(`http://${this.url}/api/Status`,null, {
                 params: {
-                    guildId: guildId
+                    guildId: guildId,
+                    guildName: guildName
                 }});
             return {
                 status: true,
@@ -107,7 +111,7 @@ class ApiService {
                 message: response.data
             };
         } catch (error) {
-            return this.handleError(`Failed to reset status: ${error.message}`);
+            return this.handleError(`Failed to reset status: ${error}`);
         }
     }
 
@@ -116,7 +120,7 @@ class ApiService {
             const response = await axios.patch(`http://${this.url}/api/Status`, status, { params: { guildId } });
             return response.data;
         } catch (error) {
-            return this.handleError(`Failed to update status: ${error.message}`);
+            return this.handleError(`Failed to update status: ${error}`);
         }
     }
 
@@ -134,7 +138,7 @@ class ApiService {
             const response = await axios.post(`http://${this.url}/api/Request/playlist`, request);
             return response.data;
         } catch (error) {
-            return this.handleError(`Failed to add playlist: ${error.message}`);
+            return this.handleError(`Failed to add playlist: ${error}`);
         }
     }
 
@@ -187,11 +191,11 @@ class ApiService {
     }
 
     handleError(message) {
-        Logger.getLogger().logError(message);
-        return {
-            status: false,
-            message: message
-        };
+        
+        this.connection = false;
+        throw new Error(`API error: ${message}`)
+
+        
     }
 }
 
