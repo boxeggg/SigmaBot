@@ -76,6 +76,7 @@ class ApiService {
             if (error.response && error.response.status === 404) {
                 try {
                     await this.createStatus(guildId,guildName);
+                    Logger.getLogger().logInfo("Added guild to DB", guildId)
                     return await this.getStatus(guildId);
                     
                 } catch (createError) {
@@ -121,6 +122,15 @@ class ApiService {
             return response.data;
         } catch (error) {
             return this.handleError(`Failed to update status: ${error}`);
+        }
+    }
+    async deleteStatus(guildId){
+        try {
+            const response = await axios.delete(`http://${this.url}/api/Status`, { params: { guildId } });
+            Logger.getLogger().logInfo("Deleted guild from DB", guildId)
+            return response.data;
+        } catch (error) {
+            return this.handleError(`Failed to delete last request: ${error.message}`);
         }
     }
 

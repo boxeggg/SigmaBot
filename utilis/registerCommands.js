@@ -15,7 +15,7 @@ const registerCommands = async (guildId, client) => {
             );
             logger.logInfo(`Added commands to guild ${guildId}`);
         } catch (error) {
-            logger.logError(`Failed to add commands to guild ${guildId}`, error);
+            logger.logError(`Failed to add commands to guild ${guildId}`);
         }
     
 }
