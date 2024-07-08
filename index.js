@@ -110,7 +110,6 @@ client.on('guildCreate', async guild => {
 });
 /// guildDelete, guildUpdate
 client.on('guildDelete', async guild => {
-    await registerCommands(guild.id, client);
     if (apiService.connection) {
         await apiService.deleteStatus(guild.id);
     }

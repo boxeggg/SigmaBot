@@ -3,7 +3,6 @@ const { Logger } = require("./Logger");
 
 class ApiService {
     connection = true;
-    isPolling = false;
     constructor(url) {
         if (ApiService.instance) {
             return ApiService.instance;

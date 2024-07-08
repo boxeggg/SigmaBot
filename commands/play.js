@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { useMainPlayer, SearchResult, GuildQueue, useQueue } = require("discord-player");
 const { ApiService } = require("../utilis/ApiService");
-const { pollStatus } = require("../utilis/getUpdate");
+const { Poller } = require("../utilis/Poller.js");
 const { Logger } = require("../utilis/Logger.js");
 const logger = Logger.getLogger()
 let apiService = ApiService.getInstance(process.env.API_URL);
@@ -25,6 +25,7 @@ module.exports = {
         if (interaction.options.getSubcommand() === "song") {
             try {
                 if (apiService.connection) {
+                    let poller = Poller.getInstance(interaction.guild.id);
                     let search = await player.search(interaction.options.getString("url", true));
                     if (search.hasPlaylist()) {
                         
@@ -59,12 +60,12 @@ module.exports = {
                             metadata: interaction
                         }
                     });
-                    if(!apiService.isPolling)
+                    if(!poller.isPolling)
                     {
                     await apiService.setOnVoiceChannel(true,interaction.guild.id);
-                    await pollStatus(interaction.guild.id);
+                    await poller.pollStatus();
                     logger.logInfo("Polling status",interaction.guild.id);
-                    apiService.isPolling = true;
+                    
                     }
                     
                     
