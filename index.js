@@ -1,3 +1,4 @@
+const { YoutubeiExtractor } = require("discord-player-youtubei")
 
 require('dotenv').config();
 const { Client, GatewayIntentBits } = require("discord.js");
@@ -11,11 +12,12 @@ const { registerCommands } = require("./utilis/registerCommands.js");
 const { Logger } = require("./utilis/Logger.js");
 const { ApiService } = require("./utilis/ApiService.js");
 let apiService = ApiService.getInstance(process.env.API_URL)
+
 const logger = Logger.getLogger();
 
 
 const player = new Player(client);
-player.extractors.loadDefault((ext) => ext);
+player.extractors.register(YoutubeiExtractor, {})
 
 player.events.on('playerStart', async (queue, track) => {
     queue.metadata.channel.send(`Started playing **${track.title}**!`);
