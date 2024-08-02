@@ -15,8 +15,10 @@ let apiService = ApiService.getInstance(process.env.API_URL)
 
 const logger = Logger.getLogger();
 const player = new Player(client);
-player.extractors.loadDefault();
-player.extractors.register(YoutubeiExtractor, {})
+player.extractors.register(YoutubeiExtractor, {});
+player.extractors.loadDefault((ext) => ext !== 'YouTubeExtractor');
+
+
 
 player.events.on('playerStart', async (queue, track) => {
     queue.metadata.channel.send(`Started playing **${track.title}**!`);
