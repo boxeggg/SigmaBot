@@ -14,9 +14,8 @@ const { ApiService } = require("./utilis/ApiService.js");
 let apiService = ApiService.getInstance(process.env.API_URL)
 
 const logger = Logger.getLogger();
-
-
 const player = new Player(client);
+player.extractors.loadDefault();
 player.extractors.register(YoutubeiExtractor, {})
 
 player.events.on('playerStart', async (queue, track) => {
@@ -94,11 +93,6 @@ client.once("ready", async () => {
         }
            
     }
-
-    
-
-
-
     loadCommands(client);
 
 

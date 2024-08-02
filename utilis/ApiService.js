@@ -21,7 +21,7 @@ class ApiService {
     
     async getLastRequest(guildId) {
         try {
-            const response = await axios.get(`http://${this.url}/api/Request/last`, { params: { guildId } });
+            const response = await axios.get(`http://${this.url}/api/Requests/last`, { params: { guildId } });
             return response.data;
         } catch (error) {
             return this.handleError(`Failed to fetch last request: ${error.message}`);
@@ -30,7 +30,7 @@ class ApiService {
 
     async clearQueue(guildId) {
         try {
-            const response = await axios.delete(`http://${this.url}/api/Request/clear`, { params: { guildId } });
+            const response = await axios.delete(`http://${this.url}/api/Requests/clear`, { params: { guildId } });
             return response.data;
         } catch (error) {
             return this.handleError(`Failed to clear queue: ${error.message}`);
@@ -39,7 +39,7 @@ class ApiService {
 
     async deleteLastRequest(guildId) {
         try {
-            const response = await axios.delete(`http://${this.url}/api/Request/last`, { params: { guildId } });
+            const response = await axios.delete(`http://${this.url}/api/Requests/last`, { params: { guildId } });
             return response.data;
         } catch (error) {
             return this.handleError(`Failed to delete last request: ${error.message}`);
@@ -48,7 +48,7 @@ class ApiService {
 
     async getRequestCount(guildId) {
         try {
-            const response = await axios.get(`http://${this.url}/api/Request/count`, { params: { guildId } });
+            const response = await axios.get(`http://${this.url}/api/Requests/count`, { params: { guildId } });
             return response.data;
         } catch (error) {
             return this.handleError(`Failed to get request count: ${error.message}`);
@@ -135,7 +135,7 @@ class ApiService {
 
     async addRequest(request) {
         try {
-            const response = await axios.post(`http://${this.url}/api/Request/new`, request);
+            const response = await axios.post(`http://${this.url}/api/Requests/new`, request);
             return response.data;
         } catch (error) {
             return this.handleError(`Failed to add request: ${error.message} for`);
@@ -144,7 +144,7 @@ class ApiService {
 
     async addPlaylist(request) {
         try {
-            const response = await axios.post(`http://${this.url}/api/Request/playlist`, request);
+            const response = await axios.post(`http://${this.url}/api/Requests/playlist`, request);
             return response.data;
         } catch (error) {
             return this.handleError(`Failed to add playlist: ${error}`);
