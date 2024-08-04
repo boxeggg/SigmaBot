@@ -15,9 +15,12 @@ let apiService = ApiService.getInstance(process.env.API_URL)
 
 const logger = Logger.getLogger();
 const player = new Player(client);
-player.extractors.register(YoutubeiExtractor, {});
-player.extractors.loadDefault((ext) => ext !== 'YouTubeExtractor');
 
+
+async function loadExtractors() {
+   await player.extractors.register(YoutubeiExtractor, {});
+   await player.extractors.loadDefault((ext) => ext !== 'YouTubeExtractor');
+}
 
 
 player.events.on('playerStart', async (queue, track) => {
@@ -51,7 +54,7 @@ player.events.on('error', async (queue, error) => {
     console.log(error);
 });
 player.events.on('playerError', async (queue, error) => {
-    await apiService.deleteLastRequest(queue.metadata.guild.id);
+    if(apiService.connection) await apiService.deleteLastRequest(queue.metadata.guild.id);
     queue.metadata.channel.send(`**Cant find your video or it is NSFW**`);
     console.log(error);
 });
@@ -73,12 +76,22 @@ player.events.on('emptyChannel', async (queue) => {
     }
     queue.metadata.channel.send('**Channel is empty leavin the voice...**');
 });
+player.on('debug', async (message) => {
+
+    console.log(`General player debug event: ${message}`);
+});
+
+player.events.on('debug', async (queue, message) => {
+
+    console.log(`Player debug event: ${message}`);
+});
 
 client.once("ready", async () => {
 
 
     client.user.setActivity('Use /play 🤫🧏🏻‍♂️');
     logger.logInfo('Bot is ready!');
+    await loadExtractors()
     const guild_ids = client.guilds.cache.map(guild => guild);
     if (apiService.connection) {
         try{
@@ -111,7 +124,7 @@ client.on('guildDelete', async guild => {
     if (apiService.connection) {
         await apiService.deleteStatus(guild.id);
     }
-
+ 
 });
 
 
