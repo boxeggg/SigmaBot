@@ -49,11 +49,11 @@ module.exports = {
                     await interaction.reply({ content: 'Looping is now off.' });
                     break;
                 case '1':
-                    queue.setRepeatMode(0)
+                    queue.setRepeatMode(1)
                     await interaction.reply({ content: `Looping the current song:  **${queue.currentTrack.title}**` });
                     break;
                 case '2':
-                    queue.setRepeatMode(0)
+                    queue.setRepeatMode(2)
                     await interaction.reply({ content: 'Looping the queue.' });
                     break;
                 default:
