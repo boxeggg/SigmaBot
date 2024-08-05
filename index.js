@@ -18,7 +18,10 @@ const player = new Player(client);
 
 
 async function loadExtractors() {
-   await player.extractors.register(YoutubeiExtractor, {});
+   await player.extractors.register(YoutubeiExtractor, {
+    streamOptions: {
+       useClient: "ANDROID"
+    }});
    await player.extractors.loadDefault((ext) => ext !== 'YouTubeExtractor');
 }
 
@@ -76,15 +79,15 @@ player.events.on('emptyChannel', async (queue) => {
     }
     queue.metadata.channel.send('**Channel is empty leavin the voice...**');
 });
-player.on('debug', async (message) => {
+// player.on('debug', async (message) => {
 
-    console.log(`General player debug event: ${message}`);
-});
+//     console.log(`General player debug event: ${message}`);
+// });
 
-player.events.on('debug', async (queue, message) => {
+// player.events.on('debug', async (queue, message) => {
 
-    console.log(`Player debug event: ${message}`);
-});
+//     console.log(`Player debug event: ${message}`);
+// });
 
 client.once("ready", async () => {
 
@@ -97,7 +100,7 @@ client.once("ready", async () => {
         try{
             for (const element of guild_ids) {
                 await apiService.getStatusWithCreate(element.id, element.name);
-                await apiService.clearQueue(element);
+                await apiService.clearQueue(element.id);
                 await apiService.resetStatus(element.id);
             }
 
