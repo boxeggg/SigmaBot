@@ -47,7 +47,7 @@ module.exports = {
                     else {
                         response = await apiService.addRequest({
                             Name: search.tracks[0].title,
-                            Url: interaction.options.getString("url", true),
+                            Url: search.tracks[0].url,
                             User: interaction.member.displayName,
                             thumbnail_Url: search.tracks[0].thumbnail,
                             GuildId: interaction.guild.id
