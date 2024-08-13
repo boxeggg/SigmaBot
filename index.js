@@ -33,14 +33,11 @@ player.events.on('playerStart', async (queue, track) => {
 player.events.on('playerFinish', async (queue, track) => {
     if (apiService.connection) {
         if (queue.repeatMode === 2) {
-            let lastTrack = await apiService.getLastRequest(queue.metadata.guild.id)
-            requestedBy = lastTrack.user;
-            thumbnail = lastTrack.thumbnail_Url;
             await apiService.addRequest({
                 Name: track.title,
                 Url: track.url,
-                User: requestedBy,
-                thumbnail_Url: thumbnail,
+                User: track.requestedBy,
+                thumbnail_Url: track.thumbnail,
                 GuildID: queue.metadata.guild.id
             });
             await apiService.deleteLastRequest(queue.metadata.guild.id);

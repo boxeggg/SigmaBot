@@ -19,10 +19,12 @@ class Poller {
         return Poller.instances[guildId];
     }
     async pollStatus() {
+
         try {
             this.isPolling = true;
             const currentStatus = await apiService.getStatus(this.guildId);
             const currentStatusMessage = currentStatus.message;
+
             
             if (currentStatusMessage.onVoiceChannel) {
 
