@@ -36,7 +36,7 @@ player.events.on('playerFinish', async (queue, track) => {
             await apiService.addRequest({
                 Name: track.title,
                 Url: track.url,
-                User: track.requestedBy,
+                User: "SigmaBot",
                 thumbnail_Url: track.thumbnail,
                 GuildID: queue.metadata.guild.id
             });
