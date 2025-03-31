@@ -15,7 +15,7 @@ SigmaBot supports the following commands:
 
 ## Dashboard & API 🌐
 
-SigmaBot comes with an optional **dashboard** and **API**, making it easier to manage the bot from web and integrate it with other applications. More details can be found in a separate repository, which you can access [here](#).
+SigmaBot comes with an optional **dashboard** and **API**, making it easier to manage the bot from web and integrate it with other applications. More details can be found in a separate repository, which you can access [here](https://github.com/boxeggg/SigmaBot-API).
 
 ## Latest Release 🚀
 
